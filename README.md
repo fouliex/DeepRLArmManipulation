@@ -26,9 +26,11 @@ During the `cmake` step, Torch will be installed so it can take awhile. It will 
 
 ## Reward Functions
 
-## Hyperparameters:
+## Hyperparameters
 
 ## Result
+
+## Future Work
 
 
 
