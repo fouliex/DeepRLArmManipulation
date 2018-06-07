@@ -1,7 +1,8 @@
 
 # Deep RL Arm Manipulation
 
-This project is based on the Nvidia open source project "jetson-reinforcement" developed by [Dustin Franklin](https://github.com/dusty-nv). The goal of the project is to create a DQN agent and define reward functions to teach a robotic arm to carry out two primary objectives:
+This project is based on the Nvidia open source project "jetson-reinforcement" developed by [Dustin Franklin](https://github.com/dusty-nv).
+The goal of the project is to create a DQN agent and define reward functions to teach a robotic arm to carry out two primary objectives:
 
 1. Have any part of the robot arm touch the object of interest, with at least a 90% accuracy.
 2. Have only the gripper base of the robot arm touch the object, with at least a 80% accuracy.
@@ -12,8 +13,8 @@ Run the following commands from terminal to build the project from source:
 
 ``` bash
 $ sudo apt-get install cmake
-$ git clone http://github.com/udacity/RoboND-DeepRL-Project
-$ cd RoboND-DeepRL-Project
+$ git clone https://github.com/fouliex/DeepRLArmManipulation.git
+$ cd DeepRLArmManipulation
 $ git submodule update --init
 $ mkdir build
 $ cd build
@@ -23,88 +24,86 @@ $ make
 
 During the `cmake` step, Torch will be installed so it can take awhile. It will download packages and ask you for your `sudo` password during the install.
 
-## Testing the API
+## C++ API
+To successfully leverage deep learning technology in robots, one need to move to a library format that integrate with robotivs and simulators.
+In addition, robots require real-time responses to changes in their environments so computation performance matters.
+Therefore the API provides an interface to the Python code written with Pytorch,but the wrappers use Python's low level C
+to pass memory objects between the user's application and Torch without extra copies. By using a complied language(C/C++) instead of an interpreted one,
+performance is improved and speeded up even more when GPU acceleration is leveraged.
 
-To make sure that the reinforcement learners are still functioning properly from C++, a simple example of using the API called [`catch`](samples/catch/catch.cpp) is provided.  Similar in concept to pong, a ball drops from the top of the screen which the agent must catch before the ball reaches the bottom of the screen, by moving it's paddle left or right.
+### API stack for Deep Reinforcement Learning
+![API Stack](./misc/apiStack.jpg)
 
-To test the textual [`catch`](samples/catch/catch.cpp) sample, run the following executable from the terminal.  After around 100 episodes or so, the agent should start winning the episodes nearly 100% of the time:  
+API Stack for Deel RL is froom Nvidia repo()
 
-``` bash
-$ cd RoboND-DeepRL-Project/build/aarch64/bin
-$ ./catch 
-[deepRL]  input_width:    64
-[deepRL]  input_height:   64
-[deepRL]  input_channels: 1
-[deepRL]  num_actions:    3
-[deepRL]  optimizer:      RMSprop
-[deepRL]  learning rate:  0.01
-[deepRL]  replay_memory:  10000
-[deepRL]  batch_size:     32
-[deepRL]  gamma:          0.9
-[deepRL]  epsilon_start:  0.9
-[deepRL]  epsilon_end:    0.05
-[deepRL]  epsilon_decay:  200.0
-[deepRL]  allow_random:   1
-[deepRL]  debug_mode:     0
-[deepRL]  creating DQN model instance
-[deepRL]  DQN model instance created
-[deepRL]  DQN script done init
-[cuda]  cudaAllocMapped 16384 bytes, CPU 0x1020a800000 GPU 0x1020a800000
-[deepRL]  pyTorch THCState  0x0318D490
-[deepRL]  nn.Conv2d() output size = 800
-WON! episode 1
-001 for 001  (1.0000)  
-WON! episode 5
-004 for 005  (0.8000)  
-WON! episode 10
-007 for 010  (0.7000)  
-WON! episode 15
-010 for 015  (0.6667)  
-WON! episode 20
-013 for 020  (0.6500)  13 of last 20  (0.65)  (max=0.65)
-WON! episode 25
-015 for 025  (0.6000)  11 of last 20  (0.55)  (max=0.65)
-LOST episode 30
-018 for 030  (0.6000)  11 of last 20  (0.55)  (max=0.65)
-LOST episode 35
-019 for 035  (0.5429)  09 of last 20  (0.45)  (max=0.65)
-WON! episode 40
-022 for 040  (0.5500)  09 of last 20  (0.45)  (max=0.65)
-LOST episode 45
-024 for 045  (0.5333)  09 of last 20  (0.45)  (max=0.65)
-WON! episode 50
-027 for 050  (0.5400)  09 of last 20  (0.45)  (max=0.65)
-WON! episode 55
-031 for 055  (0.5636)  12 of last 20  (0.60)  (max=0.65)
-LOST episode 60
-034 for 060  (0.5667)  12 of last 20  (0.60)  (max=0.65)
-WON! episode 65
-038 for 065  (0.5846)  14 of last 20  (0.70)  (max=0.70)
-WON! episode 70
-042 for 070  (0.6000)  15 of last 20  (0.75)  (max=0.75)
-LOST episode 75
-045 for 075  (0.6000)  14 of last 20  (0.70)  (max=0.75)
-WON! episode 80
-050 for 080  (0.6250)  16 of last 20  (0.80)  (max=0.80)
-WON! episode 85
-055 for 085  (0.6471)  17 of last 20  (0.85)  (max=0.85)
-WON! episode 90
-059 for 090  (0.6556)  17 of last 20  (0.85)  (max=0.85)
-WON! episode 95
-063 for 095  (0.6632)  18 of last 20  (0.90)  (max=0.90)
-WON! episode 100
-068 for 100  (0.6800)  18 of last 20  (0.90)  (max=0.90)
-WON! episode 105
-073 for 105  (0.6952)  18 of last 20  (0.90)  (max=0.90)
-WON! episode 110
-078 for 110  (0.7091)  19 of last 20  (0.95)  (max=0.95)
-WON! episode 111
-079 for 111  (0.7117)  19 of last 20  (0.95)  (max=0.95)
-WON! episode 112
-080 for 112  (0.7143)  20 of last 20  (1.00)  (max=1.00)
+## Reward Functions
+
+### The Gazebo Arm Plugin 
+The robotic arm model found in the Gazebo world calls upon a gazebo plugin called `ArmPlugin`. This plugin is responsible
+ for creating the Deep Q-Network(DQN) agent and training it to learn to touch the prop.
+ 
+ The gazebo plugin shared `libgazeboArmPlugin.so` a object file that attached to the robot model in the Gazebo world. That
+ object file is responsible for integrating the simulation environment with the Reinforcement Learning(RL) agent. The  plugin is defined
+ int the `ArmPlugin.cpp` file located in the [gazebo](./gazebo) folder.
+
+### The Arm Plugin Source Code
+The `ArmPlugin.cpp` take advantage of the **C++ API**. This plugin creates specific functions for the class ArmPlugin defined in
+`ArmPlugin.h`.
+
+###### ArmPlugin::Load()
+This function is responsible for creating and initializing nodes that subscribe to two specific topics, one for the camera
+and one for the contact sensor for the object.
+
+###### ArmPlugin::onCameraMsg()
+This function is the calllback function for the camera subscriber. It takes the message from the camera topic, extracts
+the image and saves it. This is then passed to the DQN.
+
+###### ArmPlugin::onCollisionMsg()
+This function is the callback function for the object's contact sensor. It is used to test whether the contact sensor,
+ called `my_contact`, defined for the object in Gazebo world, observes a collision with another element/model or not.
+ 
+###### ArmPlugin:createAgent()
+This function serves to create and initialize the agent.Various parameters that are passed to the `Create()` function for
+the agent are defined at the top of the file such as:
+
+```cpp
+#define INPUT_WIDTH   512
+#define INPUT_HEIGHT  512
+#define OPTIMIZER "None"
+#define LEARNING_RATE 0.0f
+#define REPLAY_MEMORY 10000
+#define BATCH_SIZE 8
+#define USE_LSTM false
+#define LSTM_SIZE 32
 ```
+###### ArmPlugin:updateAgent()
+This function receives the action value from the DQN and decides to take that action.
+For every frame that the camera receives, the agent needs to take an appropriate action. Because the DQN agent is discrete, the network
+selects one output for every frame. This output which is the action value can then be mapped to a specific action thus controlling the arm joints.
 
-Internally, [`catch`](samples/catch/catch.cpp) is using the [`dqnAgent`](c/dqnAgent.h) API from our C++ library to implement the learning.
+There are two possible ways to control the arm joints:
+* Velocity Control
+* Position Control
+
+For both of these types of control, one can increase or decrease either the joint velocity or the joint position, by a small delta value.
+
+In this project, Talk more here...
+
+###### ArmPlugin::OnUpdate()
+This function is utilized to issue rewards and train the DQN. It is called upon at every simulation iteration and can be used to update the robot joints,
+and issue both rewards based on the desired goal:
+* End of Episode(EOE)
+* Interim
+
+At EOE, various parameters for the API and the plugin are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
+
+## Hyperparameters
+
+## Result
+
+## Future Work
+
+
 
 
 ## Project Environment

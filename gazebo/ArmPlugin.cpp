@@ -1,6 +1,6 @@
 /* 
  * Author - Dustin Franklin (Nvidia Jetson Developer)
- * Modified by - Sahil Juneja, Kyle Stewart-Frantz
+ * Modified by - Sahil Juneja, Kyle Stewart-Frantz, George Fouche
  *
  */
 
