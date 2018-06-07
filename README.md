@@ -26,6 +26,45 @@ During the `cmake` step, Torch will be installed so it can take awhile. It will 
 
 ## Reward Functions
 
+### The Gazebo Arm Plugin 
+The robotic arm model found in the Gazebo world calls upon a gazebo plugin called `ArmPlugin`. This plugin is responsible
+ for creating the Deep Q-Network(DQN) agent and training it to learn to touch the prop.
+ 
+ The gazebo plugin shared libgazeboArmPlugin.so a object file that attached to the robot model in the Gazebo world. That
+ object file is responsible for integrating the simulation environment with the Reinforcement Learning(RL) agent. The  plugin is defined
+ int the `ArmPlugin.cpp` file located in the [gazebo](./gazebo) folder.
+
+### The Arm Plugin Source Code
+The `ArmPlugin.cpp` take advantage of the C++ API. This plugin creates specific functions for the class ArmPlugin defined in
+`ArmPlugin.h`.
+
+####### ArmPlugin::Load()
+This function is responsible for creating and initializing nodes that subscribe to two specific topics, one for the camera
+and one for the contact sensor for the object.
+
+###### ArmPlugin::onCameraMsg()
+This function is the calllback function for the camera subscriber. It takes the message from the camera topic, extracts
+the image and saves it. This is then passed to the DQN.
+
+###### ArmPlugin::onCollisionMsg()
+This function is the callback function for the object's contact sensor. It is used to test whether the contact sensor,
+ called `my_contact`, defined for the obect in Gazebo worl, observes a collision with another element/model or not.
+ 
+###### ArmPlugin:createAgent()
+This function serves to create and initialize the agent.Various parameters that are passed to the `Create()` function for
+the agen are defined at the top of the file such as:
+
+```cpp
+#define INPUT_WIDTH   512
+#define INPUT_HEIGHT  512
+#define OPTIMIZER "None"
+#define LEARNING_RATE 0.0f
+#define REPLAY_MEMORY 10000
+#define BATCH_SIZE 8
+#define USE_LSTM false
+#define LSTM_SIZE 32
+```
+###### ArmPlugin:updateAgent()
 ## Hyperparameters
 
 ## Result
