@@ -34,7 +34,7 @@ performance is improved and speeded up even more when GPU acceleration is levera
 ### API stack for Deep Reinforcement Learning
 ![API Stack](./misc/apiStack.jpg)
 
-API Stack for Deel RL is froom Nvidia repo()
+API Stack for Deel RL is from Nvidia [repo](https://github.com/dusty-nv/jetson-reinforcement)
 
 ## Reward Functions
 
