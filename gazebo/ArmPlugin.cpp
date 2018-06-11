@@ -31,26 +31,26 @@
 #define EPS_DECAY 200
 
 /*
-/ TODO - Tune the following hyperparameters
+/ TODO Updated - Tune the following hyperparameters
 /
 */
 
-#define INPUT_WIDTH   512
-#define INPUT_HEIGHT  512
-#define OPTIMIZER "None"
-#define LEARNING_RATE 0.0f
-#define REPLAY_MEMORY 10000
-#define BATCH_SIZE 8
-#define USE_LSTM false
-#define LSTM_SIZE 32
+#define INPUT_WIDTH   64
+#define INPUT_HEIGHT  64
+#define OPTIMIZER "Adam"
+#define LEARNING_RATE 0.01f
+#define REPLAY_MEMORY 20000
+#define BATCH_SIZE 512
+#define USE_LSTM true
+#define LSTM_SIZE 256
 
 /*
-/ TODO - Define Reward Parameters
+/ TODO Updated- Define Reward Parameters
 /
 */
 
-#define REWARD_WIN  0.0f
-#define REWARD_LOSS -0.0f
+#define REWARD_WIN  0.1f
+#define REWARD_LOSS -0.1f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
@@ -122,6 +122,9 @@ ArmPlugin::ArmPlugin() : ModelPlugin(), cameraNode(new gazebo::transport::Node()
 
 
 // Load
+/*
+sds
+*/
 void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/) 
 {
 	printf("ArmPlugin::Load('%s')\n", _parent->GetName().c_str());
@@ -130,25 +133,22 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	this->model = _parent;
 	this->j2_controller = new physics::JointController(model);
 
-	// Create our node for camera communication
-	cameraNode->Init();
-	
 	/*
-	/ TODO - Subscribe to camera topic
+	/ TODO Update - Subscribe to camera topic
 	/
 	*/
-	
-	//cameraSub = None;
+	// Create our node for camera communication
+	cameraNode->Init();
+	cameraSub = cameraNode->Subscribe("/gazebo/arm_world/camera/link/camera/image", &gazebo::ArmPlugin::onCameraMsg, this);
+
+	/*
+	/ TODO Update - Subscribe to prop collision topic
+	/
+	*/
 
 	// Create our node for collision detection
 	collisionNode->Init();
-		
-	/*
-	/ TODO - Subscribe to prop collision topic
-	/
-	*/
-	
-	//collisionSub = None;
+	collisionSub = collisionNode->Subscribe("/gazebo/arm_world/tube/tube_link/my_contact", &gazebo::ArmPlugin::onCollisionMsg, this);
 
 	// Listen to the update event. This event is broadcast every simulation iteration.
 	this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&ArmPlugin::OnUpdate, this, _1));
@@ -163,11 +163,14 @@ bool ArmPlugin::createAgent()
 
 			
 	/*
-	/ TODO - Create DQN Agent
+	/ TODO  Update - Create DQN Agent
 	/
 	*/
-	
-	agent = NULL;
+	uint32_t actions = INPUT_CHANNELS *2;
+	agent = dqnAgent::Create(INPUT_WIDTH, INPUT_HEIGHT, INPUT_CHANNELS, actions,
+							OPTIMIZER, LEARNING_RATE, REPLAY_MEMORY, BATCH_SIZE,
+							GAMMA, EPS_START, EPS_END, EPS_DECAY,
+							USE_LSTM, LSTM_SIZE, ALLOW_RANDOM, DEBUG);
 
 	if( !agent )
 	{
@@ -259,12 +262,12 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 
 	
 		/*
-		/ TODO - Check if there is collision between the arm and object, then issue learning reward
+		/ TODO Update - Check if there is collision between the arm and object, then issue learning reward
 		/
 		*/
 		
 		/*
-		
+
 		if (collisionCheck)
 		{
 			rewardHistory = None;
@@ -275,6 +278,21 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			return;
 		}
 		*/
+
+		bool collisionCheck = (strcmp(contacts->contact(i).collision1().c_str(), COLLISION_POINT) == 0) ? true : false;
+		if (collisionCheck)
+		{
+		    if(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0){
+		          rewardHistory = REWARD_WIN * 20;
+		    }else{
+		         rewardHistory = REWARD_LOSS * 5;
+
+		    }
+			newReward  = true;
+			endEpisode = true;
+			return;
+		}
+
 		
 	}
 }
