@@ -100,8 +100,22 @@ and issue both rewards based on the desired goal:
 At EOE, various parameters for the API and the plugin are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
 
 ## Arm Plugin Rewards
+The reward information are defined in the ArmPlugin::OnUpdate() function.The arms joints are updated using position control and for each
+joint there are two action which is to increase or decrease the joint position.
+### Reward Win and Reward loss
+The parameter  `REWARD_WIN` is set to 0.125 for the first objective and 0.1 for the second objective and `REWARD_LOST` is
+set to the opposite values for the objectives(-0.125 and -0.1). In addition if the gripper hit the ground a `10 * REWARD_LOST` is set and the episode end.
+Furthermore, any collision ends the episode.
 
-For the first object Re
+### Interim Rewards
+The interim rewards are base on the distance goal $\Delta$ betweem the cycling prop and the gripper. A `REWARD_WIN`
+is recorded if a positive weighted average is derived otherwise a `REWARD_LOST * dictance to goal` is recorded.
+
+For the second objective, addition `REWARD_LOST` is added to penalize no movement if the absolute average goal delta is 
+less than 0.001 for the gripper base.
+
+
+
 ## Hyperparameters
 
 *`INPUT_WIDTH` and `INPUT_HEIGHT`  are set to 64.
