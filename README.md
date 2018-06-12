@@ -36,7 +36,7 @@ performance is improved and speeded up even more when GPU acceleration is levera
 
 API Stack for Deel RL is from Nvidia [repo](https://github.com/dusty-nv/jetson-reinforcement)
 
-## Reward Functions
+## Arm Plugin
 
 ### The Gazebo Arm Plugin 
 The robotic arm model found in the Gazebo world calls upon a gazebo plugin called `ArmPlugin`. This plugin is responsible
@@ -45,6 +45,8 @@ The robotic arm model found in the Gazebo world calls upon a gazebo plugin calle
  The gazebo plugin shared `libgazeboArmPlugin.so` a object file that attached to the robot model in the Gazebo world. That
  object file is responsible for integrating the simulation environment with the Reinforcement Learning(RL) agent. The  plugin is defined
  int the `ArmPlugin.cpp` file located in the [gazebo](./gazebo) folder.
+ 
+### The Arm Plugin Base functions
 
 ### The Arm Plugin Source Code
 The `ArmPlugin.cpp` take advantage of the **C++ API**. This plugin creates specific functions for the class ArmPlugin defined in
@@ -97,7 +99,18 @@ and issue both rewards based on the desired goal:
 
 At EOE, various parameters for the API and the plugin are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
 
+## Arm Plugin Rewards
+
+For the first object Re
 ## Hyperparameters
+
+*`INPUT_WIDTH` and `INPUT_HEIGHT`  are set to 64.
+* `OPTIMIZER` is set to Adam. it performs better then RMSProp.
+* `LEARNING_RATE` is set to 0.1 for the first objective and 0.01 for the second objective
+* `REPLAY_MEMORY` is set to 10000 for the first objective and 2000 for the second objective.
+* `BATCH_SIZE` is set to 512
+* `USE_LSTM` is set to true
+* `LSTM_SIZE` is set to 256
 
 ## Result
 
