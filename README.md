@@ -154,9 +154,15 @@ As long as the robot reaches the goal on the first 50 tries  the faster the trai
 
 Below are screenshots and videos that the goal were achieved with a minimum of 100 runs:
 
-### Objective 1- Any part of the robot arm touch the object of interest with at least a 90% accuracy
-![Ubuntu Objective 1](.misc/UbuntuObjective1.png)
+### Objective 1
+Any part of the robot arm touch the object of interest with at least a 90% accuracy.
+#### Physical environment(Ubuntu 16.04) screenshot
+![Ubuntu Objective 1](./misc/UbuntuObjective1.png)
 
+### Objective 1
+Any part of the robot arm touch the object of interest with at least a 90% accuracy.
+#### Virtual environment(Udacity VM) screenshot
+![Ubuntu Objective 1](./misc/UdacityVMObjective2.png)
 
 
 ## Future Work
