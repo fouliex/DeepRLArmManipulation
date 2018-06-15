@@ -102,27 +102,49 @@ At EOE, various parameters for the API and the plugin are reset, and the current
 ## Arm Plugin Rewards
 The reward information are defined in the ArmPlugin::OnUpdate() function.The arms joints are updated using position control and for each
 joint there are two action which is to increase or decrease the joint position.
+
+### Objective 1
+#### Any part of the robot arm touch the object of Interest logic
+* A reward(`REWARD_WIN *10`) is giving If any part of the arm touch the object.
+* A reward(`REWARD_WIN`) is giving if a positive weighted average is derived.
+* A penalty(`REWARD_LOSS *10`) is giving if any part of the robot touch the ground and the episode end.
+* A penalty(`REWARD_LOST * distance to goal`) is provided if a negative weighted average is derived.
+* Any collision ends the episode
+
+### Objective 2
 ### Reward Win and Reward loss
-The parameter  `REWARD_WIN` is set to 0.125 for the first objective and 0.1 for the second objective and `REWARD_LOST` is
-set to the opposite values for the objectives(-0.125 and -0.1). In addition if the gripper hit the ground a `10 * REWARD_LOST` is set and the episode end.
-Furthermore, any collision ends the episode.
-
-### Interim Rewards
-The interim rewards are base on the distance goal $\Delta$ betweem the cycling prop and the gripper. A `REWARD_WIN`
-is recorded if a positive weighted average is derived otherwise a `REWARD_LOST * dictance to goal` is recorded.
-
-For the second objective, addition `REWARD_LOST` is added to penalize no movement if the absolute average goal delta is 
-less than 0.001 for the gripper base.
+* A reward(`REWARD_WIN *20`) is giving if the gripper base of the robot touch the object.
+* A penalty(`REWARD_LOSS *5`) is giving if any part of the robot touch the object.
+* A penalty(`REWORD_LOSS *10`) is the robot touch the ground
+* A penalty(`REWARD_LOST`) is added for no movement if the absolute average goal is less than 0.001 for the gripper base.
+* Any collision ends the episode
 
 
 
 ## Hyperparameters
-
-*`INPUT_WIDTH` and `INPUT_HEIGHT`  are set to 64.
-* `OPTIMIZER` is set to Adam. it performs better then RMSProp.
-* `LEARNING_RATE` is set to 0.1 for the first objective and 0.01 for the second objective
-* `REPLAY_MEMORY` is set to 10000 for the first objective and 2000 for the second objective.
+### Objective 1
+Objective 1 was perform on a physical machine(Ubuntu 16.04) with a GTX1080 GPU.
+Below are the Hyperparameters:
+* `INPUT_WIDTH` and `INPUT_HEIGHT`  are set to 64.
+  * Image dimensions  are set to the same size as the input.
+  * Training is perform on a GTX1080 therefore there's not need to restrict memory usage.
+* `OPTIMIZER` is set to Adam. It performs better then RMSProp in this project.
+* `LEARNING_RATE` is set to 0.1 for this objective
+* `REPLAY_MEMORY` is set to 10000 for this objective
 * `BATCH_SIZE` is set to 512
+    * 512 is use because there's enough memory on the GTX1080
+* `USE_LSTM` is set to true
+* `LSTM_SIZE` is set to 256
+
+### Objective 2
+Objective 2 was perform on a Udacity virtual machine with a Tesla k80 GPU.
+* `INPUT_WIDTH` and `INPUT_HEIGHT`  are set to 64.
+* `OPTIMIZER` is set to Adam. it performs better then RMSProp.
+* `LEARNING_RATE` is set to 0.01  for the second objective.
+* `REPLAY_MEMORY` is set to 20000 for the second objective.
+  * Due to the smaller surface area a higher replay memory is use to allow more discrete learning.
+* `BATCH_SIZE` is set to 512
+  * 512 is use because there's enough memory on the Tesla k80.
 * `USE_LSTM` is set to true
 * `LSTM_SIZE` is set to 256
 
