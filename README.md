@@ -112,6 +112,7 @@ joint there are two action which is to increase or decrease the joint position.
 * Any collision ends the episode.
 
 ### Objective 2
+#### The gripper base of the robot arm touch the object of Interest logic
 ### Reward Win and Reward loss
 * A reward(`REWARD_WIN *20`) is giving if the gripper base of the robot touch the object.
 * A penalty(`REWARD_LOSS *5`) is giving if any part of the robot touch the object.
@@ -159,14 +160,17 @@ Any part of the robot arm touch the object of interest with at least a 90% accur
 #### Physical environment(Ubuntu 16.04) screenshot
 ![Ubuntu Objective 1](./misc/UbuntuObjective1.png)
 
-### Objective 1
-Any part of the robot arm touch the object of interest with at least a 90% accuracy.
+### Objective 2
+The gripper base of the robot arm touch the object of Interest  with at least a 80% accuracy.
 #### Virtual environment(Udacity VM) screenshot
 ![Ubuntu Objective 1](./misc/UdacityVMObjective2.png)
 
 
 ## Future Work
-
+* Optimize the reward functions because after 50 runs if the gripper base doesn't touch the object of interest, there's very low chance for it to recuperate and learn how to touch
+the object.
+* Play around by increasing the hyperparameters and see how the robot performs.
+* Try making the robot to achieve the goals with the RMSProp optimizer instead of the Adam.
 
 
 
