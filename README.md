@@ -1,4 +1,10 @@
 
+[//]: # (Image References)
+[image_0]: ./misc/Objective1.gif
+[image_1]: ./misc/Objective2.gif
+# Search and Sample Return Project
+![alt text][image_0]
+![alt text][image_1]  
 # Deep RL Arm Manipulation
 
 This project is based on the Nvidia open source project "jetson-reinforcement" developed by [Dustin Franklin](https://github.com/dusty-nv).
@@ -89,7 +95,6 @@ There are two possible ways to control the arm joints:
 
 For both of these types of control, one can increase or decrease either the joint velocity or the joint position, by a small delta value.
 
-In this project, Talk more here...
 
 ###### ArmPlugin::OnUpdate()
 This function is utilized to issue rewards and train the DQN. It is called upon at every simulation iteration and can be used to update the robot joints,
