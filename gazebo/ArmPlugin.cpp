@@ -31,7 +31,7 @@
 #define EPS_DECAY 200
 
 /*
-/ TODO Updated - Tune the following hyperparameters
+/ Tune the following hyperparameters
 /
 */
 
@@ -59,8 +59,7 @@
 */
 
 /*
-/ TODO Updated- Define Reward Parameters
-/
+/ Define Reward Parameters
 */
 
 #define REWARD_WIN  0.1f
@@ -148,15 +147,14 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	this->j2_controller = new physics::JointController(model);
 
 	/*
-	/ TODO Update - Subscribe to camera topic
-	/
+	/  Subscribe to camera topic
 	*/
 	// Create our node for camera communication
 	cameraNode->Init();
 	cameraSub = cameraNode->Subscribe("/gazebo/arm_world/camera/link/camera/image", &gazebo::ArmPlugin::onCameraMsg, this);
 
 	/*
-	/ TODO Update - Subscribe to prop collision topic
+	/  Subscribe to prop collision topic
 	*/
 
 	// Create our node for collision detection
@@ -347,11 +345,11 @@ bool ArmPlugin::updateAgent()
 
 		
 	/*
-	/ TODO - Increase or decrease the joint velocity based on whether the action is even or odd
+	/  Increase or decrease the joint velocity based on whether the action is even or odd
 	/
 	*/
 	
-	float velocity = 0.0; // TODO - Set joint velocity based on whether action is even or odd.
+	float velocity = 0.0; //  Set joint velocity based on whether action is even or odd.
 
 	if( velocity < VELOCITY_MIN )
 		velocity = VELOCITY_MIN;
@@ -379,10 +377,10 @@ bool ArmPlugin::updateAgent()
 #else
 	
 	/*
-	/ TODO - Increase or decrease the joint position based on whether the action is even or odd
+	/  Increase or decrease the joint position based on whether the action is even or odd
 	/
 	*/
-	float joint = ref[action/2]; // TODO - Set joint position based on whether action is even or odd.
+	float joint = ref[action/2]; //  Set joint position based on whether action is even or odd.
 
     if(action % 2 == 0){
         joint+= actionJointDelta;
@@ -684,7 +682,6 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 
 			totalRuns++;
 			printf("Current Accuracy:  %0.4f (%03u of %03u)  (reward=%+0.2f %s)\n", float(successfulGrabs)/float(totalRuns), successfulGrabs, totalRuns, rewardHistory, (rewardHistory >= REWARD_WIN ? "WIN" : "LOSS"));
-
 
 			for( uint32_t n=0; n < DOF; n++ )
 				vel[n] = 0.0f;
