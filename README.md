@@ -2,10 +2,9 @@
 [//]: # (Image References)
 [image_0]: ./misc/Objective1.gif
 [image_1]: ./misc/Objective2.gif
-# Search and Sample Return Project
+# Deep RL Arm Manipulation
 ![alt text][image_0]
 ![alt text][image_1]  
-# Deep RL Arm Manipulation
 
 This project is based on the Nvidia open source project "jetson-reinforcement" developed by [Dustin Franklin](https://github.com/dusty-nv).
 The goal of the project is to create a DQN agent and define reward functions to teach a robotic arm to carry out two primary objectives:
